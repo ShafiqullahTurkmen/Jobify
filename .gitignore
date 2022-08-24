@@ -12,7 +12,9 @@
 /build
 
 notes.txt
-/.gitignore
+/johnwrappers
+/package-lock.json
+.gitignore
 
 # misc
 .DS_Store
