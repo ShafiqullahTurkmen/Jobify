@@ -1,12 +1,12 @@
-import logo from '../assets/images/logo.svg'
 import main from '../assets/images/main.svg'
 import Wrapper from '../assets/wrappers/LandingPage';
+import { Logo } from '../components';
 
 export default function Landing() {
   return (
     <Wrapper>
       <nav>
-        <img src={logo} alt="jobify" className='logo' />
+        <Logo />
       </nav>
 
       <div className="container page">
