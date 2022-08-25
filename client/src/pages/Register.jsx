@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Logo } from '../components'
+import Wrapper from '../assets/wrappers/RegisterPage';
 
 const initialState = {
   name: "",
@@ -21,7 +22,7 @@ export default function Register() {
     console.log(e.target);
   }
   return (
-    <div className="full-page">
+    <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>
         <Logo /> 
         <h3>Login</h3>
@@ -38,6 +39,6 @@ export default function Register() {
         </div>
          <button type="submit" className="btn btn-block">submit</button>
       </form>
-    </div>
+    </Wrapper>
   )
 }
