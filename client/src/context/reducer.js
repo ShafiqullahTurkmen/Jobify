@@ -1,8 +1,8 @@
-import { DISPLAY_ALERT } from './action';
+import { CLEAR_ALERT, DISPLAY_ALERT } from './action';
 
 const reducer = (state, action) => {
 
-  if (action.type == DISPLAY_ALERT) {
+  if (action.type === DISPLAY_ALERT) {
     return {
       ...state,
       showAlert: true,
@@ -10,6 +10,16 @@ const reducer = (state, action) => {
       alertText: "Please provide all values!",
     }
   }
+
+  if (action.type === CLEAR_ALERT) {
+    return {
+      ...state,
+      showAlert: false,
+      alertType: "",
+      alertText: "",
+    }
+  }
+
   throw new Error(`no such action : ${action.type}`);
 }
 

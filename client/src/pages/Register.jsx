@@ -26,7 +26,7 @@ export default function Register() {
   const onSubmit = (e) => {
     e.preventDefault();
     const { name, email, password, isMember } = values;
-    if (!email || !password || (!isMember && !name)) {
+    if (!email.trim() || !password.trim() || (!isMember && !name.trim())) {
       displayAlert();
       return
     }
