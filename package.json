@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "nodemon server"
-
   },
   "repository": {
     "type": "git",
@@ -23,6 +22,7 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
+    "dotenv": "^16.0.2",
     "express": "^4.18.1"
   }
 }
