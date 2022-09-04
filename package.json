@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "��#\u0000 \u0000J\u0000o\u0000b\u0000i\u0000f\u0000y\u0000\r\u0000 \u0000",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server"
+
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/ShafiqullahTurkmen/Jobify/issues"
   },
-  "homepage": "https://github.com/ShafiqullahTurkmen/Jobify#readme"
+  "homepage": "https://github.com/ShafiqullahTurkmen/Jobify#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
