@@ -1,8 +1,9 @@
 import User from '../modals/User.js';
+import { StatusCodes } from 'http-status-codes';
 
 const register = async (req, res, next) => {
   const user = await User.create(req.body);
-  res.status(201).json({user});
+  res.status(StatusCodes.CREATED).json({user});
 }
 
 const login = async (req, res) => {
