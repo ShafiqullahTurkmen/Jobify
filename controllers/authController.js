@@ -11,6 +11,8 @@ const register = async (req, res, next) => {
 
   const userAlreadyExists = User.findOne({ email });
 
+  
+
   if (userAlreadyExists) {
     throw new BadRequestError("Email already in use");
   }
