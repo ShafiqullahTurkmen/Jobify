@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,11 +10,14 @@ import notFoundMiddleware from './middleware/not-found.js';
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({ msg: "welcome"})
+});
+
+app.get("/api/v1", (req, res) => {
+  res.json({ msg: "API"})
 });
 
 app.use("/api/v1/auth", authRouter);
