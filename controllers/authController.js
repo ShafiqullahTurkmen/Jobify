@@ -8,6 +8,12 @@ const register = async (req, res, next) => {
   if (!(name && email && password)) {
     throw new BadRequestError("please provide all value");
   }
+
+  const emailAlreadyExists = await User.findOne({email});
+  
+  if (emailAlreadyExists) {
+    throw new BadRequestError("Email already exists");
+  }
   
   const user = await User.create({ name, email, password });
   const token = user.createJWT();
