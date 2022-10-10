@@ -5,7 +5,10 @@ import {
   DISPLAY_ALERT,
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
-  REGISTER_USER_ERROR
+  REGISTER_USER_ERROR,
+  LOGIN_USER_BEGIN,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_ERROR
 } from './action';
 import axios from 'axios';
 
@@ -74,6 +77,10 @@ const AppProvider = ({children}) => {
     }
     clearAlert();
   }
+
+  const loginUser = async (currentUser) => {
+    console.log(currentUser, "loginnnnnnnnnnnCurrent");
+  }
   
   return (
     <AppContext.Provider
@@ -81,7 +88,8 @@ const AppProvider = ({children}) => {
         ...state,
         displayAlert,
         clearAlert,
-        registerUser
+        registerUser,
+        loginUser
       }}
     >
       {children}
