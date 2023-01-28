@@ -3,10 +3,11 @@ import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa'
 import { useAppContext } from '../context/appContext';
 import Logo from './Logo';
 export default function Navbar() {
+  const { toggleSidebar } = useAppContext();
   return (
     <Wrapper>
       <div className="nav-center">
-        <button className="toggle-btn" onClick={() => console.log("Toggle side bar")}>
+        <button className="toggle-btn" onClick={toggleSidebar}>
           <FaAlignLeft/>
         </button>
         <div>

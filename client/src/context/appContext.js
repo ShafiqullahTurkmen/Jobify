@@ -8,7 +8,8 @@ import {
   REGISTER_USER_ERROR,
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_ERROR
+  LOGIN_USER_ERROR,
+  TOGGLE_SIDEBAR
 } from './action';
 import axios from 'axios';
 
@@ -25,6 +26,7 @@ const initialState = {
   token: token ? JSON.parse(token) : null,
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
+  showSidebar: false,
 }
 
 const AppContext = React.createContext();
@@ -98,7 +100,12 @@ const AppProvider = ({children}) => {
         payload: {msg: error.response.data.msg}
       })
     }
-    clearAlert();  }
+    clearAlert();  
+  }
+
+  const toggleSidebar = () => {
+    dispatch({ type: TOGGLE_SIDEBAR });
+  }
   
   return (
     <AppContext.Provider
@@ -107,7 +114,8 @@ const AppProvider = ({children}) => {
         displayAlert,
         clearAlert,
         registerUser,
-        loginUser
+        loginUser, 
+        toggleSidebar
       }}
     >
       {children}
