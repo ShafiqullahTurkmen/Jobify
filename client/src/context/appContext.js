@@ -9,7 +9,8 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
-  TOGGLE_SIDEBAR
+  TOGGLE_SIDEBAR,
+  LOGOUT_USER
 } from './action';
 import axios from 'axios';
 
@@ -106,6 +107,11 @@ const AppProvider = ({children}) => {
   const toggleSidebar = () => {
     dispatch({ type: TOGGLE_SIDEBAR });
   }
+
+  const logoutUser = () => {
+    dispatch(LOGOUT_USER);
+    removeUserFromLocalStorage()
+  }
   
   return (
     <AppContext.Provider
@@ -115,7 +121,8 @@ const AppProvider = ({children}) => {
         clearAlert,
         registerUser,
         loginUser, 
-        toggleSidebar
+        toggleSidebar,
+        logoutUser
       }}
     >
       {children}

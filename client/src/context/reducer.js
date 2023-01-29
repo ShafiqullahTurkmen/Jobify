@@ -7,8 +7,11 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
-  TOGGLE_SIDEBAR
+  TOGGLE_SIDEBAR,
+  LOGOUT_USER
 } from './action';
+
+import { initialState } from './appContext';
 
 const reducer = (state, action) => {
 
@@ -90,6 +93,16 @@ const reducer = (state, action) => {
     return {
       ...state,
       showSidebar: !state.showSidebar
+    }
+  }
+
+  if (action.type === LOGOUT_USER) {
+    return {
+      ...initialState,
+      user: null,
+      token: null,
+      jobLocation: "",
+      userLocation: ""
     }
   }
 
