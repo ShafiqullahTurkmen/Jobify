@@ -1,4 +1,4 @@
-import User from '../modals/User.js';
+import User from '../models/User.js';
 import { StatusCodes } from 'http-status-codes';
 import { BadRequestError, NotFoundError, UnAuthenticatedError } from '../errors/index.js';
 
