@@ -10,7 +10,6 @@ import {
   TOGGLE_SIDEBAR,
   LOGOUT_USER
 } from './action';
-
 import { initialState } from './appContext';
 
 const reducer = (state, action) => {

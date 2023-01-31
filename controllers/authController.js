@@ -57,7 +57,6 @@ const updateUser = async (req, res) => {
   }
 
   const user = await User.findOne({ _id: req.user.userId });
-
   user.email = email;
   user.name = name;
   user.lastName = lastName;
@@ -65,10 +64,7 @@ const updateUser = async (req, res) => {
   await user.save();
 
   const token = user.createJWT();
-
   res.status(StatusCodes.OK).json({ user, token, location: user.location})
-
-
 }
 
 export { register, login, updateUser }
