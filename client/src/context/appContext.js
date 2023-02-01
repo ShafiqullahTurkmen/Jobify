@@ -43,6 +43,23 @@ const AppProvider = ({ children }) => {
     }
   })
 
+  authFetch.interceptors.request.use((config) => {
+    config.headers.common['Authorization'] = `Bearer ${state.token}`
+    return config
+  }, (error) => {
+    return Promise.reject(error);
+  });
+
+  authFetch.interceptors.response.use((response) => {
+    return response
+  }, (error) => {
+    console.log(error.response);
+    if (error.response.status == 401) {
+      console.log("Auth Error");
+    }
+    return Promise.reject(error);
+  });
+
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
