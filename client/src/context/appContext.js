@@ -11,6 +11,9 @@ import {
   LOGIN_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./action";
 import axios from "axios";
 
@@ -39,26 +42,32 @@ const AppProvider = ({ children }) => {
   const authFetch = axios.create({
     baseURL: "/api/v1",
     headers: {
-      Authorization: `Bearer ${state.token}`
-    }
-  })
-
-  authFetch.interceptors.request.use((config) => {
-    config.headers.common['Authorization'] = `Bearer ${state.token}`
-    return config
-  }, (error) => {
-    return Promise.reject(error);
+      Authorization: `Bearer ${state.token}`,
+    },
   });
 
-  authFetch.interceptors.response.use((response) => {
-    return response
-  }, (error) => {
-    console.log(error.response);
-    if (error.response.status == 401) {
-      console.log("Auth Error");
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers.common["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  });
+  );
+
+  authFetch.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      if (error.response.status == 401) {
+        console.log("Auth Error");
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
@@ -132,17 +141,27 @@ const AppProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER});
+    dispatch({ type: LOGOUT_USER });
     removeUserFromLocalStorage();
   };
 
   const updateUser = async (currentUser) => {
     try {
+      dispatch({ type: UPDATE_USER_BEGIN });
       const { data } = await authFetch.patch("/auth/updateUser", currentUser);
-      console.log(data);
+      const { user, location, token } = data;
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, location, token },
+      });
+      addUserToLocalStorage({ user, location, token });
     } catch (error) {
-      console.log(error.respose);
+      dispatch({
+        type: UPDATE_USER_ERROR,
+        payload: { msg: error?.response?.data?.msg },
+      });
     }
+    clearAlert()
   };
 
   return (
