@@ -40,10 +40,7 @@ const AppProvider = ({ children }) => {
 
   // axios.defaults.headers.common["Authorization"] = `Bearer ${state.token}`
   const authFetch = axios.create({
-    baseURL: "/api/v1",
-    headers: {
-      Authorization: `Bearer ${state.token}`,
-    },
+    baseURL: "/api/v1"
   });
 
   authFetch.interceptors.request.use(
@@ -61,9 +58,8 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      console.log(error.response);
-      if (error.response.status == 401) {
-        console.log("Auth Error");
+      if (error.response.status === 401) {
+        logoutUser()
       }
       return Promise.reject(error);
     }
@@ -156,10 +152,12 @@ const AppProvider = ({ children }) => {
       });
       addUserToLocalStorage({ user, location, token });
     } catch (error) {
-      dispatch({
-        type: UPDATE_USER_ERROR,
-        payload: { msg: error?.response?.data?.msg },
-      });
+      if (error?.response?.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error?.response?.data?.msg },
+        });
+      }
     }
     clearAlert()
   };
