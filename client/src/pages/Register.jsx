@@ -75,7 +75,7 @@ export default function Register() {
           />
         )}
 
-        {/* emain input */}
+        {/* email input */}
         <FormRow
           type="email"
           name="email"
