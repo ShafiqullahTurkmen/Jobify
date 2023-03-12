@@ -32,6 +32,7 @@ const initialState = {
   showSidebar: false,
   isEditing: false,
   editJobId: "",
+  position: "",
   company: "",
   jobLocation: userLocation || "",
   jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
