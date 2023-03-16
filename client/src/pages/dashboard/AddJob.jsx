@@ -16,8 +16,6 @@ export default function AddJob() {
     statusOptions,
   } = useAppContext();
 
-  console.log(jobLocation, "lllllllllllllllllllllllllllll");
-
   const handleJobInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -66,6 +64,25 @@ export default function AddJob() {
           />
 
           {/* job type */}
+          <div className="form-row">
+            <label htmlFor="jobType" className='form-label'>
+              job type
+            </label>
+            <select
+              name="jobType"
+              value={jobType}
+              onChange={handleJobInput}
+              className='form-select'
+            >
+              {
+                jobTypeOptions.map((itemValue, index) => (
+                  <option key={index} value={itemValue}>
+                    {itemValue}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
           {/* job status */}
           <div className="btn-container">
             <button
