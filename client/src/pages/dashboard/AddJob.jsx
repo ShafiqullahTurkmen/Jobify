@@ -14,12 +14,13 @@ export default function AddJob() {
     jobTypeOptions,
     status,
     statusOptions,
+    handleChange
   } = useAppContext();
 
   const handleJobInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name, ": ", value);
+    handleChange({ name, value})
   }
 
   const handleSubmit = (e) => {
