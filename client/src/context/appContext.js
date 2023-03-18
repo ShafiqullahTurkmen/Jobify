@@ -15,7 +15,10 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
-  CLEAR_VALUES
+  CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_SUCCESS,
+  CREATE_JOB_ERROR,
 } from "./action";
 import axios from "axios";
 
@@ -40,7 +43,7 @@ const initialState = {
   jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
   jobType: "full-time",
   statusOptions: ["interview", "pending", "declined"],
-  status: "pending"
+  status: "pending",
 };
 
 const AppContext = React.createContext();
@@ -50,7 +53,7 @@ const AppProvider = ({ children }) => {
 
   // axios.defaults.headers.common["Authorization"] = `Bearer ${state.token}`
   const authFetch = axios.create({
-    baseURL: "/api/v1"
+    baseURL: "/api/v1",
   });
 
   authFetch.interceptors.request.use(
@@ -69,7 +72,7 @@ const AppProvider = ({ children }) => {
     },
     (error) => {
       if (error.response.status === 401) {
-        logoutUser()
+        logoutUser();
       }
       return Promise.reject(error);
     }
@@ -169,16 +172,39 @@ const AppProvider = ({ children }) => {
         });
       }
     }
-    clearAlert()
+    clearAlert();
   };
 
   const handleChange = ({ name, value }) => {
-    dispatch({ type: HANDLE_CHANGE, payload: { name, value}})
-  }
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
 
   const clearValues = () => {
     dispatch({ type: CLEAR_VALUES });
-  }
+  };
+
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+      await authFetch.post("/jobs", {
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status,
+      });
+      dispatch({ type: CREATE_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+      clearAlert();
+    }
+  };
 
   return (
     <AppContext.Provider
@@ -192,7 +218,8 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         handleChange,
-        clearValues
+        clearValues,
+        createJob,
       }}
     >
       {children}
