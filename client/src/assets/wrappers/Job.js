@@ -6,7 +6,6 @@ const Wrapper = styled.article`
   display: grid;
   grid-template-rows: 1fr auto;
   box-shadow: var(--shadow-2);
-
   header {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--grey-100);
@@ -70,7 +69,6 @@ const Wrapper = styled.article`
       grid-template-columns: 1fr 1fr;
     }
   }
-
   .status {
     border-radius: var(--borderRadius);
     text-transform: capitalize;
