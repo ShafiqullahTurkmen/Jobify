@@ -247,6 +247,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         clearValues,
         createJob,
+        getJobs,
       }}
     >
       {children}
