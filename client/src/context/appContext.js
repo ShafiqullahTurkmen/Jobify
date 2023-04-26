@@ -23,6 +23,9 @@ import {
   GET_JOBS_SUCCESS,
   SET_EDIT_JOB,
   DELETE_JOBS_BEGIN,
+  EDIT_JOB_BEGIN,
+  EDIT_JOB_SUCCESS,
+  EDIT_JOB_ERROR,
 } from "./action";
 import axios from "axios";
 
@@ -236,23 +239,41 @@ const AppProvider = ({ children }) => {
   };
 
   const setEditJob = (id) => {
-    dispatch({ type: SET_EDIT_JOB, payload: {id}})
-  }
+    dispatch({ type: SET_EDIT_JOB, payload: { id } });
+  };
 
-  const editJob = () => {
-    console.log("edit job function works");
-  }
+  const editJob = async () => {
+    dispatch({ type: EDIT_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+      await authFetch.patch(`/jobs/${state.editJobId}`, {
+        company,
+        position,
+        jobLocation,
+        jobType,
+        status,
+      });
+      dispatch({ type: EDIT_JOB_SUCCESS });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: EDIT_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
 
   const deleteJob = async (id) => {
     dispatch({ type: DELETE_JOBS_BEGIN });
     try {
       await authFetch.delete(`/jobs/${id}`);
-      getJobs()
+      getJobs();
     } catch (error) {
       console.log(error.response);
-     // logoutUser() 
+      // logoutUser()
     }
-  }
+  };
 
   return (
     <AppContext.Provider
@@ -271,7 +292,7 @@ const AppProvider = ({ children }) => {
         getJobs,
         setEditJob,
         deleteJob,
-        editJob
+        editJob,
       }}
     >
       {children}
