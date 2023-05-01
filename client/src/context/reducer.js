@@ -24,6 +24,8 @@ import {
   EDIT_JOB_BEGIN,
   EDIT_JOB_SUCCESS,
   EDIT_JOB_ERROR,
+  SHOW_STATS_BEGIN,
+  SHOW_STATS_SUCCESS,
 } from "./action";
 import { initialState } from "./appContext";
 
@@ -220,7 +222,7 @@ const reducer = (state, action) => {
       jobLocation,
       jobType,
       status,
-      company
+      company,
     };
   }
 
@@ -241,7 +243,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: 'Job Updated',
+      alertText: "Job Updated",
     };
   }
 
@@ -252,6 +254,22 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "danger",
       alertText: action.payload.msg,
+    };
+  }
+
+  if (action.type === SHOW_STATS_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }
+
+  if (action.type === SHOW_STATS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      stats: action.payload.stats,
+      monthlyApplications: action.payload.monthlyApplications
     };
   }
 
