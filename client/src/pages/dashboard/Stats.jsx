@@ -19,7 +19,7 @@ export default function Stats() {
       <StatsContainer />
 
       {
-        monthlyApplications.lenth && <ChartsContainer />
+        monthlyApplications.length && <ChartsContainer />
       }
     </>
   )
