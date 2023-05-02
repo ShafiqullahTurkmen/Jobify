@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import BarChart from './BarCharts';
-import AreaChart from './AreaChart';
+import AreaChart from './AreaCharts';
 import Wrapper from '../assets/wrappers/ChartsContainer';
 import { useAppContext } from '../context/appContext';
 export default function ChartsContainer() {
