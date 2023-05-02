@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import BarChart from './BarChart';
+import BarChart from './BarCharts';
 import AreaChart from './AreaChart';
 import Wrapper from '../assets/wrappers/ChartsContainer';
 import { useAppContext } from '../context/appContext';
