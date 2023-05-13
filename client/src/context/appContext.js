@@ -28,7 +28,8 @@ import {
   EDIT_JOB_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
-  CLEAR_FILTERS
+  CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./action";
 import axios from "axios";
 
@@ -64,7 +65,7 @@ const initialState = {
   searchStatus: "all",
   searchType: "all",
   sort: "latest",
-  sortOptions: ["latest", "oldest", "a-z", "z-a"]
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
 const AppContext = React.createContext();
@@ -228,9 +229,9 @@ const AppProvider = ({ children }) => {
   };
 
   const getJobs = async () => {
-    const {search, searchStatus, searchType, sort} = state;
-    let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
-    if (search) url += `&search=${search}`
+    const { search, searchStatus, searchType, sort, page } = state;
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    if (search) url += `&search=${search}`;
     dispatch({ type: GET_JOBS_BEGIN });
     try {
       const { data } = await authFetch(url);
@@ -290,20 +291,27 @@ const AppProvider = ({ children }) => {
   const showStats = async () => {
     dispatch({ type: SHOW_STATS_BEGIN });
     try {
-      const {data} = await authFetch("/jobs/stats");
-      dispatch({ type: SHOW_STATS_SUCCESS, payload: {
-        stats: data.defaultStats,
-        monthlyApplications: data.monthlyApplications
-      }})
+      const { data } = await authFetch("/jobs/stats");
+      dispatch({
+        type: SHOW_STATS_SUCCESS,
+        payload: {
+          stats: data.defaultStats,
+          monthlyApplications: data.monthlyApplications,
+        },
+      });
     } catch (error) {
       console.log(error.response);
       // loginUser();
     }
-  }
+  };
 
   const clearFilters = () => {
-    dispatch({type: CLEAR_FILTERS})
-  }
+    dispatch({ type: CLEAR_FILTERS });
+  };
+
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } });
+  };
 
   return (
     <AppContext.Provider
@@ -324,7 +332,8 @@ const AppProvider = ({ children }) => {
         deleteJob,
         editJob,
         showStats,
-        clearFilters
+        clearFilters,
+        changePage
       }}
     >
       {children}
