@@ -18,7 +18,7 @@ const createJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const { status, jobType, search, sort } = req.query;
+  const { status, jobType, search, sort, } = req.query;
   const queryObject = { createdBy: req.user.userId };
 
   if (status && status !== "all") queryObject.status = status
@@ -32,12 +32,18 @@ const getAllJobs = async (req, res) => {
   if (sort === "a-z") result = result.sort("position");
   if (sort === "z-a") result = result.sort("-position");
 
-  // chain sort conditions
+  const page =Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page -1) * limit;
+  result = result.skip(skip).limit(limit);
   const jobs = await result;
+
+  const totalJobs = await Job.countDocuments(queryObject);
+  const numOfPages = Math.ceil(totalJobs / limit);
 
   res
     .status(StatusCodes.OK)
-    .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
+    .json({ jobs, totalJobs, numOfPages });
 };
 
 const updateJob = async (req, res) => {
