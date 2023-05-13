@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import Job from "../models/Jobs.js";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/index.js";
 import checkpermission from "../utils/checkpermission.js";
-import moment from 'moment';
+import moment from "moment";
 
 const createJob = async (req, res) => {
   const { position, company } = req.body;
@@ -18,7 +18,23 @@ const createJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find({ createdBy: req.user.userId });
+  const { status, jobType, search, sort } = req.query;
+  const queryObject = { createdBy: req.user.userId };
+
+  if (status !== "all") queryObject.status = status
+  if (jobType !== "all") queryObject.jobType = jobType
+  if (search) queryObject.position = { $regex: search, $options: "i"}
+
+  let result = Job.find(queryObject);
+
+  if (sort === "latest") result = result.sort("-createdAt");
+  if (sort === "oldest") result = result.sort("createdAt");
+  if (sort === "a-z") result = result.sort("position");
+  if (sort === "z-a") result = result.sort("-position");
+
+  // chain sort conditions
+  const jobs = await result;
+
   res
     .status(StatusCodes.OK)
     .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
@@ -33,9 +49,9 @@ const updateJob = async (req, res) => {
   }
 
   const job = await Job.findOne({ _id: jobId });
-  
+
   if (!job) {
-    throw new NotFoundError(`No job with id ${jobId}`)
+    throw new NotFoundError(`No job with id ${jobId}`);
   }
 
   // check permissions
@@ -43,8 +59,8 @@ const updateJob = async (req, res) => {
 
   const updateJob = await Job.findByIdAndUpdate({ _id: jobId }, req.body, {
     new: true,
-    runValidators: true
-  })
+    runValidators: true,
+  });
   res.status(StatusCodes.OK).json({ updateJob });
 };
 
@@ -60,46 +76,54 @@ const deleteJob = async (req, res) => {
   checkpermission(req.user, job.createdBy);
 
   await job.remove();
-  res.status(StatusCodes.OK).json({ msg: 'Success Job removed'});
+  res.status(StatusCodes.OK).json({ msg: "Success Job removed" });
 };
 
 const showStats = async (req, res) => {
   let stats = await Job.aggregate([
-    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId)}},
-    { $group: { _id: "$status", count: {$sum: 1}}}
-  ])
+    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
 
   stats = stats.reduce((acc, curr) => {
     const { _id: title, count } = curr;
     acc[title] = count;
 
-    return acc
+    return acc;
   }, {});
 
   const defaultStats = {
     pending: stats.pending || 0,
     interview: stats.interview || 0,
-    declined: stats.declined || 0
+    declined: stats.declined || 0,
   };
 
   let monthlyApplications = await Job.aggregate([
-    {$match: { createdBy: mongoose.Types.ObjectId(req.user.userId)}},
+    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     {
       $group: {
-        _id: { year: {$year: "$createdAt"}, month: {$month: "$createdAt"} },
-        count: {$sum: 1}
-      }
+        _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+        count: { $sum: 1 },
+      },
     },
-    { $sort: { "_id.year": -1, "_id.month": -1}},
-    { $limit: 6}
+    { $sort: { "_id.year": -1, "_id.month": -1 } },
+    { $limit: 6 },
   ]);
 
-  monthlyApplications = monthlyApplications.map(item => {
-    const {_id: {year, month}, count} = item;
-    const date = moment().month(moment -1).year(year).format("MMM Y");
-    return { date, count}
-  }).reverse();
-  res.status(StatusCodes.OK).json({defaultStats, monthlyApplications});
+  monthlyApplications = monthlyApplications
+    .map((item) => {
+      const {
+        _id: { year, month },
+        count,
+      } = item;
+      const date = moment()
+        .month(moment - 1)
+        .year(year)
+        .format("MMM Y");
+      return { date, count };
+    })
+    .reverse();
+  res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
 
 export { createJob, getAllJobs, updateJob, deleteJob, showStats };
