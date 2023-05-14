@@ -127,7 +127,6 @@ const AppProvider = ({ children }) => {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
       const response = await axios.post("/api/v1/auth/register", currentUser);
-      console.log(response);
       const { user, token, location } = response.data;
 
       dispatch({
@@ -136,10 +135,9 @@ const AppProvider = ({ children }) => {
       });
       addUserToLocalStorage({ user, token, location });
     } catch (error) {
-      console.log(error.response);
       dispatch({
         type: REGISTER_USER_ERROR,
-        payload: { msg: error.response.data.msg },
+        payload: { msg: error?.response?.data?.msg || error?.response?.data || error.message },
       });
     }
     clearAlert();
@@ -149,7 +147,6 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGIN_USER_BEGIN });
     try {
       const { data } = await axios.post("/api/v1/auth/login", currentUser);
-      console.log(data);
       const { user, token, location } = data;
 
       dispatch({
@@ -158,10 +155,9 @@ const AppProvider = ({ children }) => {
       });
       addUserToLocalStorage({ user, token, location });
     } catch (error) {
-      // console.log(error.response);
       dispatch({
         type: LOGIN_USER_ERROR,
-        payload: { msg: error.response.data.msg },
+        payload: { msg: error?.response?.data?.msg || error?.response?.data || error.message },
       });
     }
     clearAlert();
