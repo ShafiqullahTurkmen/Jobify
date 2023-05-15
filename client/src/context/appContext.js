@@ -30,6 +30,7 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
+  DELETE_JOB_ERROR,
 } from "./action";
 import axios from "axios";
 
@@ -137,7 +138,12 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: REGISTER_USER_ERROR,
-        payload: { msg: error?.response?.data?.msg || error?.response?.data || error.message },
+        payload: {
+          msg:
+            error?.response?.data?.msg ||
+            error?.response?.data ||
+            error.message,
+        },
       });
     }
     clearAlert();
@@ -157,7 +163,12 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: LOGIN_USER_ERROR,
-        payload: { msg: error?.response?.data?.msg || error?.response?.data || error.message },
+        payload: {
+          msg:
+            error?.response?.data?.msg ||
+            error?.response?.data ||
+            error.message,
+        },
       });
     }
     clearAlert();
@@ -241,7 +252,7 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      logoutUser()
+      logoutUser();
     }
     clearAlert();
   };
@@ -278,8 +289,13 @@ const AppProvider = ({ children }) => {
       await authFetch.delete(`/jobs/${id}`);
       getJobs();
     } catch (error) {
-      logoutUser()
+      if (error.response.status === 401) return;
+      dispatch({
+        type: DELETE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
     }
+    clearAlert();
   };
 
   const showStats = async () => {
@@ -326,7 +342,7 @@ const AppProvider = ({ children }) => {
         editJob,
         showStats,
         clearFilters,
-        changePage
+        changePage,
       }}
     >
       {children}

@@ -30,3 +30,5 @@ yarn-error.log*
 .env
 .vscode
 Dummy.js
+mock-data.json
+populate.js
