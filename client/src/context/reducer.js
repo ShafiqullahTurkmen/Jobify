@@ -28,7 +28,9 @@ import {
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
-  DELETE_JOB_ERROR
+  DELETE_JOB_ERROR,
+  GET_CURRENT_USER_BEGIN,
+  GET_CURRENT_USER_SUCCESS,
 } from "./action";
 import { initialState } from "./appContext";
 
@@ -59,7 +61,6 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      token: action.payload.token,
       user: action.payload.user,
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
@@ -87,7 +88,6 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      token: action.payload.token,
       user: action.payload.user,
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
@@ -117,10 +117,7 @@ const reducer = (state, action) => {
   if (action.type === LOGOUT_USER) {
     return {
       ...initialState,
-      user: null,
-      token: null,
-      jobLocation: "",
-      userLocation: "",
+      userLoading: false,
     };
   }
 
@@ -132,7 +129,6 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      token: action.payload.token,
       user: action.payload.user,
       userLocation: action.payload.location,
       jobLocation: action.payload.location,
@@ -275,7 +271,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: true,
-    }
+    };
   }
 
   if (action.type === SHOW_STATS_SUCCESS) {
@@ -283,7 +279,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       stats: action.payload.stats,
-      monthlyApplications: action.payload.monthlyApplications
+      monthlyApplications: action.payload.monthlyApplications,
     };
   }
 
@@ -294,14 +290,32 @@ const reducer = (state, action) => {
       searchStatus: "all",
       searchType: "all",
       sort: "latest",
-    }
+    };
   }
-  
+
   if (action.type === CHANGE_PAGE) {
     return {
       ...state,
-      page: action.payload.page
-    }
+      page: action.payload.page,
+    };
+  }
+
+  if (action.type === GET_CURRENT_USER_BEGIN) {
+    return {
+      ...state,
+      userLoading: true,
+      showAlert: false
+    };
+  }
+
+  if (action.type === GET_CURRENT_USER_SUCCESS) {
+    return {
+      ...state,
+      userLoading: false,
+      user: action.payload.user,
+      userLocation: action.payload.location,
+      jobLocation: action.payload.location
+    };
   }
   throw new Error(`no such action : ${action.type}`);
 };

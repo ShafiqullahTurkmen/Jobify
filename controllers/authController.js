@@ -29,8 +29,7 @@ const register = async (req, res, next) => {
       lastName: user.lastName,
       location: user.location,
       name: user.name,
-    },
-    token,
+    }
   });
 };
 
@@ -54,7 +53,7 @@ const login = async (req, res) => {
   const token = user.createJWT();
   user.password = undefined;
   attachCookie({ res, token });
-  res.status(StatusCodes.OK).json({ user, token, location: user.location });
+  res.status(StatusCodes.OK).json({ user, location: user.location });
 };
 
 const updateUser = async (req, res) => {
@@ -72,7 +71,12 @@ const updateUser = async (req, res) => {
 
   const token = user.createJWT();
   attachCookie({ res, token });
-  res.status(StatusCodes.OK).json({ user, token, location: user.location });
+  res.status(StatusCodes.OK).json({ user, location: user.location });
 };
 
-export { register, login, updateUser };
+const getCurrentUser = async (req, res) => {
+  const user = await User.findOne({_id: req.user.userId})
+  res.status(StatusCodes.OK).json({ user, location: user.location });
+}
+
+export { register, login, updateUser, getCurrentUser };
