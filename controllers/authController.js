@@ -29,7 +29,7 @@ const register = async (req, res, next) => {
       lastName: user.lastName,
       location: user.location,
       name: user.name,
-    }
+    },
   });
 };
 
@@ -75,8 +75,16 @@ const updateUser = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
-  const user = await User.findOne({_id: req.user.userId})
+  const user = await User.findOne({ _id: req.user.userId });
   res.status(StatusCodes.OK).json({ user, location: user.location });
-}
+};
 
-export { register, login, updateUser, getCurrentUser };
+const logout = async (req, res) => {
+  res.cookie("token", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.status(StatusCodes.OK).json({ msg: "User logged out!" });
+};
+
+export { register, login, updateUser, getCurrentUser, logout };

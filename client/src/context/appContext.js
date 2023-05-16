@@ -152,7 +152,8 @@ const AppProvider = ({ children }) => {
     dispatch({ type: TOGGLE_SIDEBAR });
   };
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    await authFetch.get("/auth/logout");
     dispatch({ type: LOGOUT_USER });
   };
 
